@@ -2,4 +2,7 @@ name := "signalz"
 
 scalaVersion := "2.11.8"
 
-libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.6"
+libraryDependencies ++= Seq(
+  "org.scalaz" %% "scalaz-core" % "7.2.6",
+  "org.scalatest" % "scalatest_2.11" % "3.0.0" % "test"
+)
