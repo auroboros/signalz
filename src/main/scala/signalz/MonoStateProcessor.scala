@@ -4,14 +4,16 @@ package signalz
   * Created by johnmcgill on 10/25/16.
   */
 
-case class MonoStateProcessor[A](process: A => A, initState: A, modify: Option[A => A] = None) {
+case class MonoStateProcessor[I,S](processF: S => S, initState: S, preF: Option[(=>S,I) => S] = None) { //, postF: Option[(=>S) => O]) {
 
-  var state : A = initState
+  var state : S = initState
 
-  val coreFunc = modify.map(f => f.andThen(process)).getOrElse(process)
-
-  def nextState : A = {
-    state = coreFunc(state)
+  val nextStateF : S => S = (intermediateState: S) => {
+    state = processF(intermediateState)
     state
   }
+
+  val tmp: (I) => S = preF.map(_.curried(state)).getOrElse((input: I) => state)
+  val coreFunc: (I) => S = tmp andThen nextStateF
+//  val coreFunc: (I) => Any = postF.map(pf => tmp2 andThen pf).getOrElse(tmp2)
 }
