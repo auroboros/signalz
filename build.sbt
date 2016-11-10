@@ -1,6 +1,8 @@
 organization := "org.auroboros"
 name := "signalz"
-version := "0.0.1"
+version := "0.0.1-SNAPSHOT"
+
+//isSnapshot := true // use to force overwrite of local
 
 scalaVersion := "2.11.8"
 
