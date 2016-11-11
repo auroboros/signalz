@@ -1,9 +1,10 @@
+package experiments
+
 import org.scalatest.{FlatSpec, Matchers}
 
 import scalaz._
 import Scalaz._
-import scalaz.Monoid
-import scalaz.Tags._
+import scalaz.Tags.Multiplication
 import scalaz.syntax.Syntaxes
 
 /**

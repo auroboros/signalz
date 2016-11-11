@@ -1,35 +1,28 @@
 package signalz
 
-import com.scalaudio.amp.immutable.ugen.{OscState, SineStateGen}
-import com.scalaudio.core.{AudioContext, CoreSyntax, ScalaudioConfig}
-import com.scalaudio.core.engine.samplewise.AmpOutput
-import com.scalaudio.core.types.PitchRichInt
 import org.scalatest.{FlatSpec, Matchers}
-
-import scalaz._
-import Scalaz._
-import scala.concurrent.duration._
 /**
   * Created by johnmcgill on 11/7/16.
   */
-class StatefulProcessorSpec extends FlatSpec with Matchers with CoreSyntax {
+class StatefulProcessorSpec extends FlatSpec with Matchers {
 
-  implicit val audioContext = AudioContext(ScalaudioConfig(nOutChannels = 1))
-  val defaultOscState = OscState(0, PitchRichInt(440).Hz, 0)
+  "StatefulProcessor" should "recur with continuously updated states" in {
 
-  "signalz" should "construct a stateful synth" in {
+    val sp = StatefulProcessor((i : Int) => i + 1, 50)
 
-    val msp = StatefulProcessor(SineStateGen.nextState, defaultOscState)
-
-    1 to 1000 foreach {_ =>
-      println(msp.nextState().sample)
-    }
+    1 to 30 map {_ =>
+      sp.nextState()
+    } shouldEqual (51 to 80) // TODO: Off by one?
   }
 
-  "signalz" should "play audio from a stateful synth" in {
+  "StatefulProcessor" should "preprocess state before each update" in {
 
-    val msp = StatefulProcessor(SineStateGen.nextState, defaultOscState)
+    val outsider = 10
 
-    AmpOutput(msp.nextState.map(s => Array(s.sample))).play(5.seconds)
+    val sp = StatefulProcessor((i : Int) => i + 1, 50, Some((i: Int) => i - outsider))
+
+    1 to 5 map {_ =>
+      sp.nextState()
+    } shouldEqual Vector(41, 32, 23, 14, 5)
   }
 }

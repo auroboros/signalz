@@ -5,8 +5,7 @@ version := "0.0.2-SNAPSHOT"
 homepage := Some(url("https://github.com/auroboros/signalz"))
 licenses := Seq("copyright" -> url("https://github.com/auroboros/signalz/blob/master/license.txt"))
 
-pomExtra := (
-    <scm>
+pomExtra := <scm>
       <url>git@github.com:auroboros/signalz.git</url>
       <connection>scm:git:git@github.com:auroboros/signalz.git</connection>
     </scm>
@@ -16,7 +15,7 @@ pomExtra := (
         <name>John McGill</name>
         <url>https://github.com/auroboros</url>
       </developer>
-    </developers>)
+    </developers>
 
 //isSnapshot := true // use to force overwrite of local
 
@@ -37,7 +36,6 @@ publishTo := {
 resolvers += Resolver.mavenLocal
 
 libraryDependencies ++= Seq(
-  "org.auroboros" %% "scalaudio-amp" % "0.0.1-SNAPSHOT" % "test",
   "org.scalaz" %% "scalaz-core" % "7.2.6" % "test",
   "org.scalatest" % "scalatest_2.11" % "3.0.0" % "test"
 )
