@@ -1,9 +1,22 @@
 organization := "org.auroboros"
 name := "signalz"
-version := "0.0.1-SNAPSHOT"
+version := "0.0.2-SNAPSHOT"
 
 homepage := Some(url("https://github.com/auroboros/signalz"))
 licenses := Seq("copyright" -> url("https://github.com/auroboros/signalz/blob/master/license.txt"))
+
+pomExtra := (
+    <scm>
+      <url>git@github.com:auroboros/signalz.git</url>
+      <connection>scm:git:git@github.com:auroboros/signalz.git</connection>
+    </scm>
+    <developers>
+      <developer>
+        <id>fat0wl</id>
+        <name>John McGill</name>
+        <url>https://github.com/auroboros</url>
+      </developer>
+    </developers>)
 
 //isSnapshot := true // use to force overwrite of local
 
