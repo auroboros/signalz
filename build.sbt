@@ -21,7 +21,10 @@ publishTo := {
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
 
+resolvers += Resolver.mavenLocal
+
 libraryDependencies ++= Seq(
-  "org.scalaz" %% "scalaz-core" % "7.2.6",
+  "org.auroboros" %% "scalaudio-amp" % "0.0.1-SNAPSHOT" % "test",
+  "org.scalaz" %% "scalaz-core" % "7.2.6" % "test",
   "org.scalatest" % "scalatest_2.11" % "3.0.0" % "test"
 )
