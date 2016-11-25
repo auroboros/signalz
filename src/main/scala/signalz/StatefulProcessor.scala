@@ -6,13 +6,14 @@ package signalz
 
 case class StatefulProcessor[A, B](process: A => A,
                                    initState: A,
-                                   modify: (=>A, B) => A = ((a, b) => identity(a)) : (=>A, B) => A) {
+                                   modify: Option[(=> A, B) => A] = None) {
 
-  var state : A = initState
+  var state: A = initState
 
-  val coreFunc = modify.curried(state).andThen(process)
+  val coreFunc = modify.map(_.curried(state).andThen(process))
+    .getOrElse((b: B) => process(state))
 
-  val nextState : (B) => A = (input: B) => {
+  val nextState: (B) => A = (input: B) => {
     state = coreFunc(input)
     state
   }
@@ -20,9 +21,9 @@ case class StatefulProcessor[A, B](process: A => A,
 
 object StatefulProcessor {
   def apply[A](process: A => A,
-            initState: A) = new StatefulProcessor[A, Unit](process, initState)
+               initState: A) = new StatefulProcessor[A, Unit](process, initState)
 
-  def withModification[A, B](process: A => A,
-                             initState: A,
-                             modify: (=>A, B) => A) = new StatefulProcessor(process, initState, modify)
+  def withModifier[A, B](process: A => A,
+                         initState: A,
+                         modify: (=> A, B) => A) = new StatefulProcessor(process, initState, Some(modify))
 }

@@ -17,7 +17,7 @@ class StatefulProcessorSpec extends FlatSpec with Matchers {
 
   "StatefulProcessor" should "preprocess state before each update" in {
 
-    val sp = StatefulProcessor.withModification[Int, Int](i => i + 1, 50, (i, b) => i - b)
+    val sp = StatefulProcessor.withModifier[Int, Int](i => i + 1, 50, (i, b) => i - b)
 
     1 to 5 map {_ =>
       sp.nextState(10)
