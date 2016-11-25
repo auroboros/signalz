@@ -8,7 +8,7 @@ class StatefulProcessorSpec extends FlatSpec with Matchers {
 
   "StatefulProcessor" should "recur with continuously updated states" in {
 
-    val sp = StatefulProcessor[Int, Unit](i => i + 1, 50)
+    val sp = StatefulProcessor((i: Int) => i + 1, 50)
 
     1 to 30 map {_ =>
       sp.nextState()
@@ -17,7 +17,7 @@ class StatefulProcessorSpec extends FlatSpec with Matchers {
 
   "StatefulProcessor" should "preprocess state before each update" in {
 
-    val sp = StatefulProcessor[Int, Int](i => i + 1, 50, (i, b) => i - b)
+    val sp = StatefulProcessor.withModification[Int, Int](i => i + 1, 50, (i, b) => i - b)
 
     1 to 5 map {_ =>
       sp.nextState(10)

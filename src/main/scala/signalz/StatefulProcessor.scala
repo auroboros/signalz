@@ -17,3 +17,12 @@ case class StatefulProcessor[A, B](process: A => A,
     state
   }
 }
+
+object StatefulProcessor {
+  def apply[A](process: A => A,
+            initState: A) = new StatefulProcessor[A, Unit](process, initState)
+
+  def withModification[A, B](process: A => A,
+                             initState: A,
+                             modify: (=>A, B) => A) = new StatefulProcessor(process, initState, modify)
+}
