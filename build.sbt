@@ -1,6 +1,6 @@
 organization := "org.auroboros"
 name := "signalz"
-version := "0.0.2-SNAPSHOT"
+version := "0.1.0-SNAPSHOT"
 
 homepage := Some(url("https://github.com/auroboros/signalz"))
 licenses := Seq("copyright" -> url("https://github.com/auroboros/signalz/blob/master/license.txt"))
