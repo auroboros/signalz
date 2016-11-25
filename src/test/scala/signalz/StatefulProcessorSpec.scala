@@ -8,7 +8,7 @@ class StatefulProcessorSpec extends FlatSpec with Matchers {
 
   "StatefulProcessor" should "recur with continuously updated states" in {
 
-    val sp = StatefulProcessor((i : Int) => i + 1, 50)
+    val sp = StatefulProcessor[Int,Unit]((i : Int) => i + 1, 50)
 
     1 to 30 map {_ =>
       sp.nextState()
@@ -17,12 +17,13 @@ class StatefulProcessorSpec extends FlatSpec with Matchers {
 
   "StatefulProcessor" should "preprocess state before each update" in {
 
-    val outsider = 10
-
-    val sp = StatefulProcessor((i : Int) => i + 1, 50, Some((i: Int) => i - outsider))
+    val sp = StatefulProcessor((i : Int) => i + 1, 50, (i: Int, b: Int) => i - b)
 
     1 to 5 map {_ =>
-      sp.nextState()
+      sp.nextState(10)
     } shouldEqual Vector(41, 32, 23, 14, 5)
   }
+
+  // TODO: use Int tuple as state, and do some addition of counter value + mod 3 of some separate pre-processor counter?
+  // Basically... something convoluted enough to test the flow as in a unit gen, but where we can easily verify / manually compute the values
 }
