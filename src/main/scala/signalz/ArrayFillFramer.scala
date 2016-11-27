@@ -5,6 +5,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by johnmcgill on 11/10/16.
   */
+// TODO: Is this actually just an instance of state mutating processor?
 case class ArrayFillFramer(producer: () => Double, channels: Int = 1) {
   val frame : ArrayBuffer[Double] = ArrayBuffer.fill(3)(0.0)
 
