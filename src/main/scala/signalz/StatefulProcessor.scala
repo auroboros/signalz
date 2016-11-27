@@ -4,26 +4,34 @@ package signalz
   * Created by johnmcgill on 10/25/16.
   */
 
-case class StatefulProcessor[A, B](process: A => A,
-                                   initState: A,
-                                   modify: Option[(=> A, B) => A] = None) {
+class StatefulProcessor[A](val process: A => A,
+                           val initState: A) {
 
   var state: A = initState
 
-  val coreFunc = modify.map(_.curried(state).andThen(process))
-    .getOrElse((b: B) => process(state))
+  val nextState: () => A = () => {
+    state = process(state)
+    state
+  }
+}
+
+class StatefulProcessorWithModifier[A, B](val process: A => A,
+                                          val initState: A,
+                                          val modify: (A, B) => A) {
+
+  var state: A = initState
 
   val nextState: (B) => A = (input: B) => {
-    state = coreFunc(input)
+    state = process(modify(state, input))
     state
   }
 }
 
 object StatefulProcessor {
   def apply[A](process: A => A,
-               initState: A) = new StatefulProcessor[A, Unit](process, initState)
+               initState: A) = new StatefulProcessor[A](process, initState)
 
   def withModifier[A, B](process: A => A,
                          initState: A,
-                         modify: (=> A, B) => A) = new StatefulProcessor(process, initState, Some(modify))
+                         modify: (A, B) => A) = new StatefulProcessorWithModifier(process, initState, modify)
 }
