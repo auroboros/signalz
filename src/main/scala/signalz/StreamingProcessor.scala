@@ -1,15 +1,18 @@
 package signalz
 
+import scala.annotation.tailrec
+
 /**
   * Created by johnmcgill on 11/26/16.
   */
+// TODO: Technically there is no need for OO style here... these 2 classes can basically just be factory methods for producing a stream
 class StreamingProcessor[A](val process: A => A,
                             val initState: A) {
 
+  // Could remove this & simply make this stream a default param to recursive process, but would require empty-parens access so probably won't bother...
   def outStream: Stream[A] = recursiveProcess(initState)
 
-  private def recursiveProcess(currentState: A): Stream[A] =
-    currentState #:: recursiveProcess(process(currentState))
+  private def recursiveProcess(state: A): Stream[A] = state #:: recursiveProcess(process(state))
 }
 
 class StreamingProcessorWithModifier[A, B](val process: A => A,
