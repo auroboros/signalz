@@ -1,11 +1,10 @@
 package signalz
 
-import scala.annotation.tailrec
-
 /**
   * Created by johnmcgill on 11/26/16.
   */
 // TODO: Technically there is no need for OO style here... these 2 classes can basically just be factory methods for producing a stream
+// (but then process/modify functions would need to passed around? Then maybe an anonymous object, so may as well use a class...?
 class StreamingProcessor[A](val process: A => A,
                             val initState: A) {
 
@@ -19,9 +18,9 @@ class StreamingProcessorWithModifier[A, B](val process: A => A,
                                            val initState: A,
                                            val modify: (A, B) => A) {
 
-  def outStream(inStream: Stream[B]): Stream[A] = recursiveProcess(initState, inStream.tail) // TODO: Use tail only since init state is fixed?
+  def outStream(inStream: => Stream[B]): Stream[A] = recursiveProcess(initState, inStream.tail) // TODO: Use tail only since init state is fixed?
 
-  private def recursiveProcess(currentState: A, inStream: Stream[B]): Stream[A] =
+  private def recursiveProcess(currentState: A, inStream: => Stream[B]): Stream[A] =
     currentState #:: recursiveProcess(process(modify(currentState, inStream.head)), inStream.tail) // TODO: ...or use modified state for both pieces of this function? Kindof strange since process isn't really called for first...
 }
 
