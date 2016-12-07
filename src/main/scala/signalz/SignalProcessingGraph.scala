@@ -5,33 +5,25 @@ package signalz
   */
 
 trait SignalProcessingGraph {
-  var currentFrame: Long = 0 // Current time in samples
 
-  def run(nFrames: Long)
+  def run(nIterations: Long)
+
   def runWhile(loopCondition: Unit => Boolean)
 }
 
 class FunctionGraph(val signalGraph: () => _) extends SignalProcessingGraph {
 
-  def run(nFrames: Long) =
-    1L to nFrames foreach { s =>
-      signalGraph()
-      currentFrame = s
-    }
+  def run(nIterations: Long) = 1L to nIterations foreach { _ => signalGraph() }
 
-  def runWhile(loopCondition: Unit => Boolean) =
-    while (loopCondition()) {
-      signalGraph()
-      currentFrame += 1
-    }
+  def runWhile(loopCondition: Unit => Boolean) = while (loopCondition()) {
+    signalGraph()
+  }
 
 }
 
 class StreamGraph(stream: => Stream[_]) extends SignalProcessingGraph {
 
-  def run(nFrames: Long) =
-    stream.map(_ => currentFrame += 1).take(nFrames.toInt)
+  def run(nIterations: Long) = stream.take(nIterations.toInt)
 
-  def runWhile(loopCondition: Unit => Boolean): Unit =
-    stream.map(_ => currentFrame += 1).takeWhile(loopCondition)
+  def runWhile(loopCondition: Unit => Boolean): Unit = stream.takeWhile(_ => loopCondition())
 }
