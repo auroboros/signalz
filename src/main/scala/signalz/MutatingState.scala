@@ -6,7 +6,13 @@ package signalz
 trait ReflexiveMutatingState[S,I,O] extends MutatingState[S,I,O] {
   self: S =>
 
-  def asReflexiveFunction = mutableProcessor(this).next
+  val thisAsState: S = this
+
+  object asReflexiveFunction {
+    def apply() : (I) => (O, S) = asFunction(thisAsState)
+
+    def withModifier(modify: (I,S) => Unit) = asFunction.withModifier(thisAsState, modify)
+  }
 }
 
 trait MutatingState[S, I, O] {
