@@ -18,13 +18,14 @@ trait MutatingState[S, I, O] {
     def apply(initState: S) = StateMutatingProcessor(process, initState)
 
     def withModifier(initState: S,
-                     modifier: (I,S) => Unit) = StateMutatingProcessor.withModifier(process, initState, modifier)
+                     modify: (I,S) => Unit) = StateMutatingProcessor.withModifier(process, initState, modify)
   }
 
   object asFunction {
     def apply(initState: S): (I) => (O, S) = mutableProcessor(initState).next
 
-    val withModifier = mutableProcessor.withModifier(_, _).next
+    def withModifier(initState: S,
+                     modify: (I,S) => Unit) = mutableProcessor.withModifier(initState, modify).next
   }
 
 }
