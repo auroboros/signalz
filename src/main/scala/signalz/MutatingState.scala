@@ -6,7 +6,13 @@ package signalz
 trait ReflexiveMutatingState[S,I,O] extends MutatingState[S,I,O] {
   self: S =>
 
-  def asReflexiveFunction = mutableProcessor(process, this).next
+  val thisAsState: S = this
+
+  object asReflexiveFunction {
+    def apply() : (I) => (O, S) = asFunction(thisAsState)
+
+    def withModifier(modify: (I,S) => Unit) = asFunction.withModifier(thisAsState, modify)
+  }
 }
 
 trait MutatingState[S, I, O] {
@@ -15,11 +21,17 @@ trait MutatingState[S, I, O] {
 
   //private?
   object mutableProcessor {
-    def apply(process: (I, S) => (O, S), initState: S) = StateMutatingProcessor(process, initState)
+    def apply(initState: S) = StateMutatingProcessor(process, initState)
+
+    def withModifier(initState: S,
+                     modify: (I,S) => Unit) = StateMutatingProcessor.withModifier(process, initState, modify)
   }
 
   object asFunction {
-    def apply(initState: S): (I) => (O, S) = mutableProcessor(process, initState).next
+    def apply(initState: S): (I) => (O, S) = mutableProcessor(initState).next
+
+    def withModifier(initState: S,
+                     modify: (I,S) => Unit) = mutableProcessor.withModifier(initState, modify).next
   }
 
 }
