@@ -1,13 +1,13 @@
 organization := "org.auroboros"
-name := "signalz"
+name := "signal-z"
 version := "0.1.0-SNAPSHOT"
 
-homepage := Some(url("https://github.com/auroboros/signalz"))
-licenses := Seq("copyright" -> url("https://github.com/auroboros/signalz/blob/master/license.txt"))
+homepage := Some(url("https://github.com/auroboros/signal-z"))
+licenses := Seq("copyright" -> url("https://github.com/auroboros/signal-z/blob/master/license.txt"))
 
 pomExtra := <scm>
-      <url>git@github.com:auroboros/signalz.git</url>
-      <connection>scm:git:git@github.com:auroboros/signalz.git</connection>
+      <url>git@github.com:auroboros/signal-z.git</url>
+      <connection>scm:git:git@github.com:auroboros/signal-z.git</connection>
     </scm>
     <developers>
       <developer>
@@ -36,6 +36,6 @@ publishTo := {
 resolvers += Resolver.mavenLocal
 
 libraryDependencies ++= Seq(
-  "org.scalaz" %% "scalaz-core" % "7.2.6" % "test",
+  "org.scalaz" %% "scalaz-core" % "7.2.8" % "test",
   "org.scalatest" % "scalatest_2.11" % "3.0.0" % "test"
 )
