@@ -11,7 +11,7 @@ trait ReflexiveMutatingState[S,I,O] extends MutatingState[S,I,O] {
   object asReflexiveFunction {
     def apply() : (I) => (O, S) = asFunction(thisAsState)
 
-    def withModifier(modify: (I,S) => Unit) = asFunction.withModifier(thisAsState, modify)
+    def withModifier[M](modify: (M,I,S) => Unit) = asFunction.withModifier(thisAsState, modify)
   }
 }
 
@@ -23,15 +23,15 @@ trait MutatingState[S, I, O] {
   object mutableProcessor {
     def apply(initState: S) = StateMutatingProcessor(process, initState)
 
-    def withModifier(initState: S,
-                     modify: (I,S) => Unit) = StateMutatingProcessor.withModifier(process, initState, modify)
+    def withModifier[M](initState: S,
+                     modify: (M,I,S) => Unit) = StateMutatingProcessor.withModifier(process, initState, modify)
   }
 
   object asFunction {
     def apply(initState: S): (I) => (O, S) = mutableProcessor(initState).next
 
-    def withModifier(initState: S,
-                     modify: (I,S) => Unit) = mutableProcessor.withModifier(initState, modify).next
+    def withModifier[M](initState: S,
+                     modify: (M,I,S) => Unit) = mutableProcessor.withModifier(initState, modify).next
   }
 
 }

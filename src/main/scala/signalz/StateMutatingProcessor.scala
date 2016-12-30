@@ -12,14 +12,14 @@ class StateMutatingProcessor[S, I, O](process: (I, S) => (O, S),
   }
 }
 
-class StateMutatingProcessorWithModifier[S, I, O](process: (I, S) => (O, S),
+class StateMutatingProcessorWithModifier[S, I, O, M](process: (I, S) => (O, S),
                                                        initState: S,
-                                                       modify: (I, S) => Unit) {
+                                                       modify: (M, I, S) => Unit) {
   val state: S = initState
 
-  val next: I => (O, S) = (i: I) => {
-    modify(i, state)
-    process(i, state)
+  val next: (M, I) => (O, S) = (modInput:M, input: I) => {
+    modify(modInput, input, state)
+    process(input, state)
   }
 }
 
@@ -27,7 +27,7 @@ object StateMutatingProcessor {
   def apply[S, I, O](process: (I, S) => (O, S),
                      initState: S) = new StateMutatingProcessor(process, initState)
 
-  def withModifier[S, I, O](process: (I, S) => (O, S),
+  def withModifier[S, I, O, M](process: (I, S) => (O, S),
                             initState: S,
-                            modify: (I, S) => Unit) = new StateMutatingProcessorWithModifier(process, initState, modify)
+                            modify: (M, I, S) => Unit) = new StateMutatingProcessorWithModifier(process, initState, modify)
 }
